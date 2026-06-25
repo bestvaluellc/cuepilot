@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CuePilot</title>
+    <meta
+      name="description"
+      content="CuePilot helps creators, hosts, and production teams organize prompts, cues, and show flow in one focused workspace."
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17202a;
+        --muted: #5e6978;
+        --line: #dce3ea;
+        --paper: #f7f9fb;
+        --panel: #ffffff;
+        --accent: #176b87;
+        --accent-strong: #0f4f64;
+        --warm: #f2c078;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+        line-height: 1.5;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .site-header {
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .nav {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        max-width: 1120px;
+        min-height: 72px;
+        padding: 0 24px;
+      }
+
+      .brand {
+        align-items: center;
+        display: flex;
+        font-size: 1.1rem;
+        font-weight: 800;
+        gap: 10px;
+        letter-spacing: 0;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        align-items: center;
+        background: var(--accent);
+        border-radius: 8px;
+        color: white;
+        display: inline-flex;
+        font-weight: 900;
+        height: 36px;
+        justify-content: center;
+        width: 36px;
+      }
+
+      .nav-links {
+        align-items: center;
+        display: flex;
+        gap: 18px;
+        font-size: 0.95rem;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .nav-links a:hover {
+        color: var(--ink);
+      }
+
+      .hero {
+        border-bottom: 1px solid var(--line);
+        background:
+          linear-gradient(135deg, rgba(23, 107, 135, 0.12), transparent 42%),
+          linear-gradient(315deg, rgba(242, 192, 120, 0.24), transparent 40%),
+          var(--panel);
+      }
+
+      .hero-inner {
+        display: grid;
+        gap: 48px;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        margin: 0 auto;
+        max-width: 1120px;
+        min-height: calc(100vh - 72px);
+        padding: 88px 24px 72px;
+        place-items: center;
+      }
+
+      .eyebrow {
+        color: var(--accent-strong);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        margin: 0 0 14px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 8vw, 6.8rem);
+        line-height: 0.95;
+        letter-spacing: 0;
+        margin: 0;
+      }
+
+      .lead {
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2vw, 1.35rem);
+        margin: 26px 0 0;
+        max-width: 620px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 34px;
+      }
+
+      .button {
+        align-items: center;
+        border-radius: 8px;
+        display: inline-flex;
+        font-weight: 800;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 18px;
+        text-decoration: none;
+      }
+
+      .button-primary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .button-secondary {
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+      }
+
+      .show-board {
+        background: #101820;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        box-shadow: 0 28px 70px rgba(23, 32, 42, 0.26);
+        color: white;
+        overflow: hidden;
+        width: min(100%, 520px);
+      }
+
+      .board-top {
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        padding: 18px 20px;
+      }
+
+      .status {
+        align-items: center;
+        color: #b8c5d1;
+        display: inline-flex;
+        font-size: 0.86rem;
+        gap: 8px;
+      }
+
+      .dot {
+        background: #49d17d;
+        border-radius: 50%;
+        height: 9px;
+        width: 9px;
+      }
+
+      .timecode {
+        color: var(--warm);
+        font-variant-numeric: tabular-nums;
+        font-weight: 800;
+      }
+
+      .cue-list {
+        display: grid;
+        gap: 12px;
+        padding: 18px;
+      }
+
+      .cue {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        display: grid;
+        gap: 6px;
+        padding: 16px;
+      }
+
+      .cue.active {
+        background: rgba(23, 107, 135, 0.36);
+        border-color: rgba(242, 192, 120, 0.58);
+      }
+
+      .cue-label {
+        color: #8ea2b3;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .cue-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+      }
+
+      .cue-meta {
+        color: #b8c5d1;
+        font-size: 0.9rem;
+      }
+
+      main section {
+        margin: 0 auto;
+        max-width: 1120px;
+        padding: 64px 24px;
+      }
+
+      .section-heading {
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1;
+        margin: 0 0 18px;
+      }
+
+      .section-copy {
+        color: var(--muted);
+        font-size: 1.1rem;
+        margin: 0;
+        max-width: 720px;
+      }
+
+      .features {
+        display: grid;
+        gap: 18px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin-top: 36px;
+      }
+
+      .feature {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 22px;
+      }
+
+      .feature h3 {
+        font-size: 1.05rem;
+        margin: 0 0 10px;
+      }
+
+      .feature p {
+        color: var(--muted);
+        margin: 0;
+      }
+
+      .site-footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.95rem;
+        padding: 28px 24px;
+      }
+
+      .footer-inner {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        margin: 0 auto;
+        max-width: 1120px;
+      }
+
+      .footer-inner a {
+        text-decoration: none;
+      }
+
+      @media (max-width: 820px) {
+        .hero-inner {
+          grid-template-columns: 1fr;
+          min-height: auto;
+          padding-top: 56px;
+        }
+
+        .features {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-inner,
+        .nav {
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: center;
+          padding-bottom: 18px;
+          padding-top: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="index.html" aria-label="CuePilot home">
+          <span class="brand-mark">C</span>
+          <span>CuePilot</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="CuePilot overview">
+        <div class="hero-inner">
+          <div>
+            <p class="eyebrow">Run-of-show clarity</p>
+            <h1>CuePilot</h1>
+            <p class="lead">
+              Plan prompts, cues, timing, and production notes in a calm workspace
+              built for people who need the next beat ready before it happens.
+            </p>
+            <div class="actions">
+              <a class="button button-primary" href="#features">Explore Features</a>
+              <a class="button button-secondary" href="privacy.html">View Privacy</a>
+            </div>
+          </div>
+
+          <div class="show-board" aria-label="Sample cue board">
+            <div class="board-top">
+              <span class="status"><span class="dot" aria-hidden="true"></span>Live plan</span>
+              <span class="timecode">00:18:42</span>
+            </div>
+            <div class="cue-list">
+              <div class="cue">
+                <span class="cue-label">Next</span>
+                <span class="cue-title">Host intro</span>
+                <span class="cue-meta">Lower-third ready, music bed at 20%</span>
+              </div>
+              <div class="cue active">
+                <span class="cue-label">Now</span>
+                <span class="cue-title">Product demo handoff</span>
+                <span class="cue-meta">Camera 2, slide 07, remind speaker on timing</span>
+              </div>
+              <div class="cue">
+                <span class="cue-label">Standby</span>
+                <span class="cue-title">Audience questions</span>
+                <span class="cue-meta">Queue top three, hold final prompt for wrap</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" aria-labelledby="features-heading">
+        <h2 class="section-heading" id="features-heading">Stay ahead of every cue.</h2>
+        <p class="section-copy">
+          CuePilot gives fast-moving teams a shared place to prepare, revise, and
+          follow show flow without losing the details that make live work feel smooth.
+        </p>
+        <div class="features">
+          <article class="feature">
+            <h3>Scripted Flow</h3>
+            <p>Organize segments, prompts, handoffs, and timing notes in the order your team needs them.</p>
+          </article>
+          <article class="feature">
+            <h3>Production Notes</h3>
+            <p>Keep speaker reminders, visual cues, links, and technical details attached to the right moment.</p>
+          </article>
+          <article class="feature">
+            <h3>Ready Reference</h3>
+            <p>Give hosts and operators a focused view of what is live now, what is next, and what needs attention.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>&copy; 2026 CuePilot. All rights reserved.</span>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </footer>
+  </body>
+</html>
