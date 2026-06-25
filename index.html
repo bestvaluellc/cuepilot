@@ -3,22 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CuePilot</title>
+    <title>CuePilot | Apple Music Playlist Creator</title>
     <meta
       name="description"
-      content="CuePilot helps creators, hosts, and production teams organize prompts, cues, and show flow in one focused workspace."
+      content="CuePilot is an Apple Music playlist creator that helps you turn a prompt, vibe, or occasion into a ready-to-save playlist."
     >
     <style>
       :root {
         color-scheme: light;
-        --ink: #17202a;
-        --muted: #5e6978;
-        --line: #dce3ea;
-        --paper: #f7f9fb;
+        --ink: #17181c;
+        --muted: #626674;
+        --line: #dde1ea;
+        --paper: #f7f8fb;
         --panel: #ffffff;
-        --accent: #176b87;
-        --accent-strong: #0f4f64;
-        --warm: #f2c078;
+        --accent: #d83b62;
+        --accent-strong: #a91f45;
+        --blue: #2456d6;
+        --mint: #2fbf9b;
       }
 
       * {
@@ -64,7 +65,6 @@
         font-size: 1.1rem;
         font-weight: 800;
         gap: 10px;
-        letter-spacing: 0;
         text-decoration: none;
       }
 
@@ -99,15 +99,15 @@
       .hero {
         border-bottom: 1px solid var(--line);
         background:
-          linear-gradient(135deg, rgba(23, 107, 135, 0.12), transparent 42%),
-          linear-gradient(315deg, rgba(242, 192, 120, 0.24), transparent 40%),
-          var(--panel);
+          radial-gradient(circle at 18% 18%, rgba(216, 59, 98, 0.18), transparent 30%),
+          radial-gradient(circle at 78% 38%, rgba(36, 86, 214, 0.14), transparent 28%),
+          linear-gradient(180deg, #ffffff, #f7f8fb);
       }
 
       .hero-inner {
         display: grid;
         gap: 48px;
-        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
         margin: 0 auto;
         max-width: 1120px;
         min-height: calc(100vh - 72px);
@@ -125,7 +125,7 @@
       }
 
       h1 {
-        font-size: clamp(3rem, 8vw, 6.8rem);
+        font-size: clamp(3rem, 8vw, 6.4rem);
         line-height: 0.95;
         letter-spacing: 0;
         margin: 0;
@@ -135,7 +135,7 @@
         color: var(--muted);
         font-size: clamp(1.05rem, 2vw, 1.35rem);
         margin: 26px 0 0;
-        max-width: 620px;
+        max-width: 640px;
       }
 
       .actions {
@@ -167,80 +167,111 @@
         color: var(--ink);
       }
 
-      .show-board {
-        background: #101820;
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 8px;
-        box-shadow: 0 28px 70px rgba(23, 32, 42, 0.26);
+      .phone {
+        background: #101116;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 28px;
+        box-shadow: 0 28px 70px rgba(23, 24, 28, 0.25);
         color: white;
         overflow: hidden;
-        width: min(100%, 520px);
+        padding: 14px;
+        width: min(100%, 390px);
       }
 
-      .board-top {
+      .screen {
+        background:
+          linear-gradient(145deg, rgba(216, 59, 98, 0.28), transparent 38%),
+          linear-gradient(315deg, rgba(47, 191, 155, 0.18), transparent 44%),
+          #171923;
+        border-radius: 18px;
+        min-height: 620px;
+        padding: 22px;
+      }
+
+      .screen-top {
         align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
-        padding: 18px 20px;
+        margin-bottom: 28px;
       }
 
-      .status {
-        align-items: center;
-        color: #b8c5d1;
-        display: inline-flex;
-        font-size: 0.86rem;
-        gap: 8px;
+      .pill {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        color: #d7dbea;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 7px 11px;
       }
 
-      .dot {
-        background: #49d17d;
-        border-radius: 50%;
-        height: 9px;
-        width: 9px;
-      }
-
-      .timecode {
-        color: var(--warm);
-        font-variant-numeric: tabular-nums;
-        font-weight: 800;
-      }
-
-      .cue-list {
-        display: grid;
-        gap: 12px;
+      .playlist-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
         padding: 18px;
       }
 
-      .cue {
-        border: 1px solid rgba(255, 255, 255, 0.1);
+      .cover {
+        aspect-ratio: 1;
+        background:
+          linear-gradient(135deg, #d83b62, #2456d6 54%, #2fbf9b);
         border-radius: 8px;
         display: grid;
-        gap: 6px;
-        padding: 16px;
+        margin-bottom: 18px;
+        place-items: center;
       }
 
-      .cue.active {
-        background: rgba(23, 107, 135, 0.36);
-        border-color: rgba(242, 192, 120, 0.58);
+      .cover span {
+        font-size: 3rem;
+        font-weight: 900;
       }
 
-      .cue-label {
-        color: #8ea2b3;
-        font-size: 0.78rem;
+      .playlist-title {
+        font-size: 1.35rem;
+        font-weight: 900;
+        margin: 0;
+      }
+
+      .playlist-meta {
+        color: #c4c9d8;
+        margin: 4px 0 18px;
+      }
+
+      .track-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .track {
+        align-items: center;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 34px 1fr auto;
+      }
+
+      .track-number {
+        align-items: center;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        color: #e8ebf4;
+        display: inline-flex;
+        font-size: 0.86rem;
         font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        height: 34px;
+        justify-content: center;
+        width: 34px;
       }
 
-      .cue-title {
-        font-size: 1.05rem;
+      .track-name {
+        display: block;
         font-weight: 800;
       }
 
-      .cue-meta {
-        color: #b8c5d1;
-        font-size: 0.9rem;
+      .track-artist,
+      .duration {
+        color: #aeb6c8;
+        font-size: 0.88rem;
       }
 
       main section {
@@ -346,11 +377,12 @@
       <section class="hero" aria-label="CuePilot overview">
         <div class="hero-inner">
           <div>
-            <p class="eyebrow">Run-of-show clarity</p>
+            <p class="eyebrow">Apple Music playlist creator</p>
             <h1>CuePilot</h1>
             <p class="lead">
-              Plan prompts, cues, timing, and production notes in a calm workspace
-              built for people who need the next beat ready before it happens.
+              Turn a vibe, activity, mood, or moment into a polished Apple Music
+              playlist. CuePilot helps you shape the idea, refine the track list,
+              and save it to your library.
             </p>
             <div class="actions">
               <a class="button button-primary" href="#features">Explore Features</a>
@@ -358,26 +390,42 @@
             </div>
           </div>
 
-          <div class="show-board" aria-label="Sample cue board">
-            <div class="board-top">
-              <span class="status"><span class="dot" aria-hidden="true"></span>Live plan</span>
-              <span class="timecode">00:18:42</span>
-            </div>
-            <div class="cue-list">
-              <div class="cue">
-                <span class="cue-label">Next</span>
-                <span class="cue-title">Host intro</span>
-                <span class="cue-meta">Lower-third ready, music bed at 20%</span>
+          <div class="phone" aria-label="Sample CuePilot playlist screen">
+            <div class="screen">
+              <div class="screen-top">
+                <span class="pill">Prompt: late-night drive</span>
+                <span class="pill">Apple Music</span>
               </div>
-              <div class="cue active">
-                <span class="cue-label">Now</span>
-                <span class="cue-title">Product demo handoff</span>
-                <span class="cue-meta">Camera 2, slide 07, remind speaker on timing</span>
-              </div>
-              <div class="cue">
-                <span class="cue-label">Standby</span>
-                <span class="cue-title">Audience questions</span>
-                <span class="cue-meta">Queue top three, hold final prompt for wrap</span>
+              <div class="playlist-card">
+                <div class="cover"><span>CP</span></div>
+                <p class="playlist-title">Neon Backroads</p>
+                <p class="playlist-meta">24 songs curated for momentum</p>
+                <div class="track-list">
+                  <div class="track">
+                    <span class="track-number">1</span>
+                    <span>
+                      <span class="track-name">City Lights</span>
+                      <span class="track-artist">Synthwave mix</span>
+                    </span>
+                    <span class="duration">3:44</span>
+                  </div>
+                  <div class="track">
+                    <span class="track-number">2</span>
+                    <span>
+                      <span class="track-name">Open Highway</span>
+                      <span class="track-artist">Indie pop pulse</span>
+                    </span>
+                    <span class="duration">4:01</span>
+                  </div>
+                  <div class="track">
+                    <span class="track-number">3</span>
+                    <span>
+                      <span class="track-name">After Midnight</span>
+                      <span class="track-artist">Dream pop glow</span>
+                    </span>
+                    <span class="duration">3:28</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -385,23 +433,23 @@
       </section>
 
       <section id="features" aria-labelledby="features-heading">
-        <h2 class="section-heading" id="features-heading">Stay ahead of every cue.</h2>
+        <h2 class="section-heading" id="features-heading">Build playlists from a spark.</h2>
         <p class="section-copy">
-          CuePilot gives fast-moving teams a shared place to prepare, revise, and
-          follow show flow without losing the details that make live work feel smooth.
+          CuePilot makes playlist creation feel quick, intentional, and personal,
+          whether you are soundtracking a workout, dinner, trip, focus session, or party.
         </p>
         <div class="features">
           <article class="feature">
-            <h3>Scripted Flow</h3>
-            <p>Organize segments, prompts, handoffs, and timing notes in the order your team needs them.</p>
+            <h3>Prompt to Playlist</h3>
+            <p>Describe a mood, genre, activity, or reference point and get a playlist direction you can refine.</p>
           </article>
           <article class="feature">
-            <h3>Production Notes</h3>
-            <p>Keep speaker reminders, visual cues, links, and technical details attached to the right moment.</p>
+            <h3>Apple Music Ready</h3>
+            <p>Connect with Apple Music so finished playlists can be saved where you already listen.</p>
           </article>
           <article class="feature">
-            <h3>Ready Reference</h3>
-            <p>Give hosts and operators a focused view of what is live now, what is next, and what needs attention.</p>
+            <h3>Easy Refinement</h3>
+            <p>Tune the energy, variety, era, and flow until the playlist feels right for the moment.</p>
           </article>
         </div>
       </section>
